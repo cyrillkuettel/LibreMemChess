@@ -1,6 +1,5 @@
 
 # Anki
-from aqt import mw
 from aqt.qt import *
 
 # PyQT
@@ -8,6 +7,11 @@ from PyQt5.QtGui import *
 from PyQt5.Qt import Qt
 import aqt
 from anki.importing import AnkiPackageImporter
+# import the main window object (mw) from aqt
+from aqt import mw
+from aqt.utils import showInfo, qconnect
+from aqt.qt import *
+
 
 anki_version = tuple(int(part) for part in aqt.appVersion.split("."))
 
@@ -34,8 +38,24 @@ def run_quizlet_plugin():
     global __window
     __window = QuizletWindow()
 
+def test_main():
+    ## ======================================= test stuff
+    def example_card_count():
 
-# create menu item in Anki
+        cardCount = mw.col.cardCount()
+        mw.col.
+        showInfo("Card count: %d" % cardCount)
+
+    action = QAction("test", mw)
+    qconnect(action.triggered, example_card_count)
+    mw.form.menuTools.addAction(action)
+
+
+test_main()
+
+    ## ======================================= test stuff
+
+
 action = QAction("Import Puzzles from Lichess", mw)
-action.triggered.connect(run_quizlet_plugin)
+qconnect(action.triggered, run_quizlet_plugin)
 mw.form.menuTools.addAction(action)
