@@ -2,6 +2,14 @@
 
 
 
+
+## Setup 
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
 An anki plugin based on this project:
 https://github.com/TowelSniffer/Anki-Chess-2.0
 
