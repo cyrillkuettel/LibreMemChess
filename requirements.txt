@@ -1,0 +1,5 @@
+PyQt5
+anki # are both required for Anki ??
+aqt
+
+pytest
