@@ -7889,7 +7889,7 @@ background-image: url('_bK.svg');
     var count; // Int so we can track on which move we are.
     var expectedLine; // Set initially to the mainline of pgn but can change path with variations
     var expectedMove; // Set the expected move according to PGN
-    var promoteChoice = 'q'; //default promotion to queen, can be changed with button withing template however it must be specified before move is made.
+    var promoteChoice = 'q'; //default promotion to queen, can be changed with button withing user_files however it must be specified before move is made.
     var foundVariation; // a bullion to check if there are multiple lines
     var responseVar; // used to randomly sellect an appropriate response
 
@@ -11606,7 +11606,7 @@ background-image: url('_bK.svg');
     }
 
     /**
-     * Compile a string to a template function for the path.
+     * Compile a string to a user_files function for the path.
      *
      * @param  {String}   str
      * @return {Function}

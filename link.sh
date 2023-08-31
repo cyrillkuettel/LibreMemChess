@@ -13,5 +13,5 @@ if [ -d "$plugin_path_linux" ]; then
 fi
 
 if [ -d "$plugin_path_mac" ]; then
-    ln -s -f $(pwd)/src $plugin_path_mac/$plugin_name
+    ln -s -f $(pwd)/src "$plugin_path_mac/$plugin_name"
 fi

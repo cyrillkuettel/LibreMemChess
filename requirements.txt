@@ -1,5 +1,5 @@
-PyQt5
-anki # are both required for Anki ??
-aqt
+PyQt6
+anki
+aqt #gui
 
 pytest
