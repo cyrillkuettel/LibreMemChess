@@ -16,9 +16,9 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 
 
-# fixme: very inelegant, obnoxious even
-sys.path.append(os.path.dirname(os.path.abspath(__file__))) # src
-from utils import media_files_path, refresh_ui
+from .utils import media_files_path, refresh_ui
+from . import utils
+
 
 anki_version = tuple(int(part) for part in aqt.appVersion.split("."))
 
