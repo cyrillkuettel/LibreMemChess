@@ -1,4 +1,6 @@
 PyQt6
+PyQt6-WebEngine  # somehow this is required
+
 anki
 aqt #gui
 

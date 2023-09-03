@@ -2,13 +2,22 @@ import os
 import tempfile
 import zipfile
 import sqlite3
+from pathlib import Path
 
 
+def addon_dir():
+    from aqt.profiles import ProfileManager
+    profile_manager = ProfileManager(
+        ProfileManager.get_created_base_folder(path_override=None)
+    )
+    addon_folder = Path(profile_manager.addonFolder()) / "LibreMemChess"
+    return addon_folder
 
-def chess_apkg():
-    CURRENT = os.path.dirname(os.path.abspath(__file__))
-    user_files = os.path.join(CURRENT, "user_files")
+def chess_apkg_path():
+    addon_folder = addon_dir()
+    user_files = os.path.join(addon_folder, "user_files")
     return os.path.join(user_files, "chess.apkg")
+
 
 
 def get_single_note(file, temporary_directory: str):
@@ -38,7 +47,9 @@ def get_single_note(file, temporary_directory: str):
 def test_read_anki_deck():
 
 
-    chess_apkg = chess_apkg()
+    chess_apkg = chess_apkg_path()
+    assert os.path.isfile(chess_apkg)
+    return
 
     # use namedtemporaryfile: temp dir:
     with tempfile.TemporaryDirectory() as tmp:

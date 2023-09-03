@@ -1,6 +1,7 @@
 import os
 import shutil
 import sys
+from pathlib import Path
 import aqt
 
 from anki.importing import AnkiPackageImporter
@@ -16,20 +17,13 @@ from aqt.utils import showInfo, qconnect
 from aqt.qt import *
 
 
-from .utils import media_files_path, refresh_ui
+from .utils import media_files_path, refresh_ui, chess_apkg_path
 from . import utils
 
 
 anki_version = tuple(int(part) for part in aqt.appVersion.split("."))
+is_first_run = False
 
-
-def chess_apkg_path():
-    # todo: use ProfileManager absolute path to avoid issues
-    from aqt.profiles import ProfileManager
-
-    CURRENT = os.path.dirname(os.path.abspath(__file__))
-    user_files = os.path.join(CURRENT, "user_files")
-    return os.path.join(user_files, "chess.apkg")
 
 
 class QuizletWindow(QWidget):
@@ -53,23 +47,30 @@ def run_quizlet_plugin():
     __window = QuizletWindow()
 
 
+def setup_initial_if_first_time():
+    # Copy external media files to collection.media folder
+    if is_first_run:
+        media_dest = os.path.join(mw.col.media.dir(), '')
+        showInfo(f"collections.media is {media_dest}")
+        shutil.copytree(media_files_path(), media_dest)
+
+
+def make_visible_in_collection():
+    QTimer.singleShot(0, refresh_ui)
+
+
 def test_import():
     def wrapper():
         # cardCount = mw.col.cardCount()
         # this might be useful, but for now we want to create a new package
         # showInfo("Card count: %d" % cardCount)
 
-        # Copy external media files to collection.media folder
-        media_dest = os.path.join(mw.col.media.dir(), '')
-        # showInfo(f"collections.media is {media_dest}")
-        showInfo(f"media files path is {media_files_path()}")
-        # shutil.copytree(media_files_path(), media_dest)
+        setup_initial_if_first_time()
 
-        showInfo(f"Importing {chess_apkg_path()}")
         importer = AnkiPackageImporter(mw.col, chess_apkg_path())
         importer.run()
 
-        QTimer.singleShot(0, refresh_ui)
+        make_visible_in_collection()
 
         # Update media database
         # mw.col.media.force_resync()
