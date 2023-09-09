@@ -1,7 +1,7 @@
-PyQt6
+PyQt6 # todo: we shouln't need this
 PyQt6-WebEngine  # somehow this is required
 
-anki
+anki==2.1.65
 aqt #gui
 
 pytest

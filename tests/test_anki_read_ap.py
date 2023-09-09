@@ -44,12 +44,12 @@ def get_single_note(file, temporary_directory: str):
     return note
 
 
+
 def test_read_anki_deck():
 
 
     chess_apkg = chess_apkg_path()
     assert os.path.isfile(chess_apkg)
-    return
 
     # use namedtemporaryfile: temp dir:
     with tempfile.TemporaryDirectory() as tmp:

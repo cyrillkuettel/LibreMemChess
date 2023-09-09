@@ -20,12 +20,15 @@ def addon_dir():
         ProfileManager.get_created_base_folder(path_override=None)
     )
     addon_folder = Path(profile_manager.addonFolder()) / "LibreMemChess"
+    assert Path(addon_folder).is_dir()
     return addon_folder
 
 def chess_apkg_path():
     addon_folder = addon_dir()
     user_files = os.path.join(addon_folder, "user_files")
-    return os.path.join(user_files, "chess.apkg")
+    path = os.path.join(user_files, "chess_2.apkg")
+    assert os.path.isfile(path)
+    return path
 
 def refresh_ui():
     mw.reset()

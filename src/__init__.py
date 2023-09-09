@@ -1,13 +1,12 @@
-import os
 import shutil
-import sys
 from pathlib import Path
-import aqt
+from anki.collection import Collection
 
 from anki.importing import AnkiPackageImporter
+from anki.notes import Note
 # import the main window object (mw) from aqt
 
-from aqt import mw
+from aqt import mw, appVersion
 from aqt.utils import showInfo, qconnect
 
 # from the documentation:
@@ -21,7 +20,7 @@ from .utils import media_files_path, refresh_ui, chess_apkg_path
 from . import utils
 
 
-anki_version = tuple(int(part) for part in aqt.appVersion.split("."))
+anki_version = tuple(int(part) for part in appVersion.split("."))
 is_first_run = False
 
 
@@ -57,26 +56,48 @@ def setup_initial_if_first_time():
 
 def make_visible_in_collection():
     QTimer.singleShot(0, refresh_ui)
-
+def get_last_added_note(collection: 'Collection'):
+    last_nid = collection.db.scalar("SELECT max(id) FROM notes")
+    return mw.col.getNote(last_nid)
 
 def test_import():
     def wrapper():
-        # cardCount = mw.col.cardCount()
+        card_count_before = mw.col.cardCount()
         # this might be useful, but for now we want to create a new package
         # showInfo("Card count: %d" % cardCount)
 
         setup_initial_if_first_time()
+        p = chess_apkg_path()
+        importer = AnkiPackageImporter(mw.col, p)
+        try:
+            importer.run()
+        except Exception as e:
+            showInfo(f"Error: {str(e)}, path=={p}")
 
-        importer = AnkiPackageImporter(mw.col, chess_apkg_path())
-        importer.run()
+
+        card_count_after = mw.col.cardCount()
+        assert card_count_after == card_count_before +1
+
+        note: 'Note' = get_last_added_note(mw.col)
+        assert isinstance(note, Note)
+        assert note, "Note assert failed"
+
+        new_note = Note(mw.col, model=note.model())
+        new_note.fields = note.fields.copy()
+        deck_id = note.note_type()["did"]
+
+        # I think we have to insert into the note.fields the new values,
+        # that will be a list of chess pgn
+
+        mw.col.add_note(new_note, deck_id)
+        mw.col.save()
 
         make_visible_in_collection()
-
         # Update media database
         # mw.col.media.force_resync()
 
 
-    action = QAction("test", mw)
+    action = QAction("test_import", mw)
     qconnect(action.triggered, wrapper)
     mw.form.menuTools.addAction(action)
 
